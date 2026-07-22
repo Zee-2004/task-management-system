@@ -1,26 +1,26 @@
-\# TaskFlow — Task Management System
+\# TaskFlow
 
 
 
-A full-stack task management application built with React, Node.js, Express, TypeScript, and PostgreSQL. Users can authenticate, manage their daily tasks, and track progress through an intuitive dashboard.
+A full-stack task management app built with React, Node.js, Express, TypeScript, and PostgreSQL. Log in, create tasks, track them by priority and status, and get a quick overview from the dashboard.
+
+
+
+\*\*Live Demo:\*\* https://your-frontend-url.vercel.app  
+
+\*\*API:\*\* https://your-backend-url.onrender.com
 
 
 
 \---
 
-\*\*Live Demo:\*\* `https://your-frontend-url.vercel.app`
 
-\*\*API:\*\* `https://your-backend-url.onrender.com`
-
-
-
-\---
 
 \## Project Overview
 
 
 
-TaskFlow allows an authenticated user to create, view, update, and delete tasks. A real-time dashboard summarizes task counts by status (Pending, In Progress, Completed, Overdue). The application includes search, filtering, sorting, pagination, dark mode, and is fully responsive across desktop, tablet, and mobile.
+After logging in you land on a dashboard showing how many tasks are pending, in progress, completed, or overdue. From there you can create tasks, edit them, delete them, search by title, filter by status or priority, and sort by date. There's also a dark mode toggle and the layout works on mobile.
 
 
 
@@ -42,7 +42,7 @@ TaskFlow allows an authenticated user to create, view, update, and delete tasks.
 
 | Database | PostgreSQL |
 
-| Authentication | JWT (JSON Web Tokens) + bcrypt |
+| Authentication | JWT + bcrypt |
 
 | Validation | express-validator (backend), controlled forms (frontend) |
 
@@ -76,7 +76,7 @@ TaskFlow allows an authenticated user to create, view, update, and delete tasks.
 
 ```bash
 
-git clone <your-repo-url>
+git clone https://github.com/Zee-2004/task-management-system.git
 
 cd task-management-system
 
@@ -92,7 +92,7 @@ cd task-management-system
 
 
 
-\### Backend — `backend/.env`
+\### Backend
 
 
 
@@ -128,7 +128,7 @@ DB\_PASSWORD=your\_postgres\_password
 
 
 
-JWT\_SECRET=your\_long\_random\_secret
+JWT\_SECRET=your\_long\_random\_string
 
 JWT\_EXPIRES\_IN=1h
 
@@ -140,7 +140,9 @@ CORS\_ORIGIN=http://localhost:5173
 
 
 
-Generate a secure JWT secret:
+To generate a secure JWT secret:
+
+
 
 ```bash
 
@@ -150,7 +152,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 
 
-\### Frontend — `frontend/.env`
+\### Frontend
 
 
 
@@ -178,29 +180,11 @@ VITE\_API\_BASE\_URL=http://localhost:5000/api
 
 
 
-\*\*1. Create the database:\*\*
-
 ```bash
 
 psql -U postgres -c "CREATE DATABASE task\_management;"
 
-```
-
-
-
-\*\*2. Run the schema:\*\*
-
-```bash
-
 psql -U postgres -d task\_management -f database/schema.sql
-
-```
-
-
-
-\*\*3. Seed the default admin account:\*\*
-
-```bash
 
 psql -U postgres -d task\_management -f database/seed.sql
 
@@ -208,7 +192,9 @@ psql -U postgres -d task\_management -f database/seed.sql
 
 
 
-\*\*Default credentials:\*\*
+Default login credentials:
+
+
 
 | Field | Value |
 
@@ -240,11 +226,7 @@ npm run dev
 
 
 
-Server runs at `http://localhost:5000`
-
-
-
-Health check: `GET http://localhost:5000/api/health`
+Runs at http://localhost:5000. Health check: GET /api/health
 
 
 
@@ -268,7 +250,7 @@ npm run dev
 
 
 
-App runs at `http://localhost:5173`
+Runs at http://localhost:5173
 
 
 
@@ -280,7 +262,7 @@ App runs at `http://localhost:5173`
 
 
 
-All endpoints except `/api/auth/login` require an `Authorization: Bearer <token>` header.
+All endpoints except /api/auth/login require an `Authorization: Bearer <token>` header.
 
 
 
@@ -288,13 +270,13 @@ All endpoints except `/api/auth/login` require an `Authorization: Bearer <token>
 
 
 
-| Method | Endpoint | Body | Description |
+| Method | Endpoint | Description |
 
-|---|---|---|---|
+|---|---|---|
 
-| POST | `/api/auth/login` | `{ email, password }` | Returns JWT token and user info |
+| POST | /api/auth/login | Log in, returns JWT token |
 
-| POST | `/api/auth/logout` | — | Clears session (client discards token) |
+| POST | /api/auth/logout | Log out |
 
 
 
@@ -306,45 +288,21 @@ All endpoints except `/api/auth/login` require an `Authorization: Bearer <token>
 
 |---|---|---|
 
-| GET | `/api/tasks` | List tasks. Supports `search`, `status`, `priority`, `sortBy` query params |
+| GET | /api/tasks | List tasks (supports search, status, priority, sortBy params) |
 
-| GET | `/api/tasks/:id` | Get a single task by ID |
+| GET | /api/tasks/:id | Get one task |
 
-| POST | `/api/tasks` | Create a new task |
+| POST | /api/tasks | Create a task |
 
-| PUT | `/api/tasks/:id` | Update an existing task |
+| PUT | /api/tasks/:id | Update a task |
 
-| DELETE | `/api/tasks/:id` | Delete a task |
+| DELETE | /api/tasks/:id | Delete a task |
 
-| GET | `/api/tasks/stats/dashboard` | Get dashboard counts |
-
-
-
-\### Task object
+| GET | /api/tasks/stats/dashboard | Get dashboard counts |
 
 
 
-```json
-
-{
-
-&#x20; "title": "string (required, max 200 chars)",
-
-&#x20; "description": "string (optional)",
-
-&#x20; "priority": "Low | Medium | High (required)",
-
-&#x20; "status": "Pending | In Progress | Completed (required)",
-
-&#x20; "due\_date": "YYYY-MM-DD (required, cannot be in the past)"
-
-}
-
-```
-
-
-
-\### Dashboard stats response
+\### Task fields
 
 
 
@@ -352,15 +310,15 @@ All endpoints except `/api/auth/login` require an `Authorization: Bearer <token>
 
 {
 
-&#x20; "total": 10,
+&#x20; "title": "required, max 200 characters",
 
-&#x20; "pending": 4,
+&#x20; "description": "optional",
 
-&#x20; "inProgress": 3,
+&#x20; "priority": "Low | Medium | High",
 
-&#x20; "completed": 2,
+&#x20; "status": "Pending | In Progress | Completed",
 
-&#x20; "overdue": 1
+&#x20; "due\_date": "YYYY-MM-DD, cannot be in the past"
 
 }
 
@@ -370,11 +328,15 @@ All endpoints except `/api/auth/login` require an `Authorization: Bearer <token>
 
 \---
 
-\## Folder structure
+
+
+\## Folder Structure
 
 
 
 The project is split into three main folders — `backend` for the API, `frontend` for the React app, and `database` for the SQL files. Inside the backend, code is organized by what it does: routes define the endpoints, controllers handle the logic, middleware handles auth and validation, and utils hold shared helpers. The frontend follows a similar pattern with pages, components, an api folder for all HTTP calls, and a context folder for auth state.
+
+
 
 \---
 
@@ -386,15 +348,15 @@ The project is split into three main folders — `backend` for the API, `fronten
 
 \- A single admin account is used as specified. No registration flow is implemented.
 
-\- "Overdue" is defined as `due\_date < today AND status != Completed`.
+\- Overdue means the due date has passed and the task is not completed.
 
-\- Search matches partial, case-insensitive text against task title only.
+\- Search is case-insensitive and matches any part of the title.
 
-\- JWT is used over session-based auth as it was the preferred option in the requirements.
+\- JWT was chosen over session-based auth as it was the preferred option.
 
-\- Tasks are scoped to `user\_id` to support multiple users in future, even though only one account currently exists.
+\- Tasks are scoped to user\_id to support multiple users in future.
 
-\- Frontend validation prevents past due dates on new tasks. Editing an existing overdue task allows saving without changing the date.
+\- Editing an existing overdue task allows saving without changing the date.
 
 
 
@@ -406,13 +368,13 @@ The project is split into three main folders — `backend` for the API, `fronten
 
 
 
-\- No registration flow (not required by spec).
+\- No registration page (not required by spec).
 
-\- JWT does not currently implement refresh tokens — session expires after 1 hour and requires re-login.
+\- Sessions expire after 1 hour — refresh tokens not implemented.
 
 \- No automated test suite (listed as a bonus feature).
 
-\- Pagination is client-side (8 tasks per page) rather than server-side.
+\- Pagination is client-side, 8 tasks per page.
 
 
 
@@ -424,13 +386,13 @@ The project is split into three main folders — `backend` for the API, `fronten
 
 
 
-\- Dark mode (persists across sessions via localStorage)
+\- Dark mode, persists across sessions via localStorage
 
 \- Toast notifications for all user actions
 
-\- Loading indicators (spinner + skeleton animations)
+\- Loading indicators and skeleton animations
 
-\- Pagination (8 tasks per page)
+\- Pagination, 8 tasks per page
 
-\- Responsive design (desktop, tablet, mobile)
+\- Fully responsive across desktop, tablet, and mobile
 
