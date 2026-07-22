@@ -1,5 +1,5 @@
 import api from './axios';
-import { Task, DashboardStats, TaskFormData } from '../types';
+import type { Task, DashboardStats, TaskFormData } from '../types';
 
 export interface TaskFilters {
   search?: string;
