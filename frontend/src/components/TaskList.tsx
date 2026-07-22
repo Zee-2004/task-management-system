@@ -26,7 +26,10 @@ export default function TaskList({ onStatsRefresh }: Props) {
   const loadTasks = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await getTasks({ search, status, priority, sortBy });
+      const cleanFilters = Object.fromEntries(
+        Object.entries({ search, status, priority, sortBy }).filter(([, v]) => v !== '')
+      );
+      const data = await getTasks(cleanFilters);
       setTasks(data);
       setPage(1);
     } catch {
@@ -51,11 +54,22 @@ export default function TaskList({ onStatsRefresh }: Props) {
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
-      month: 'short', day: 'numeric', year: 'numeric'
+      month: 'short', day: 'numeric', year: 'numeric',
     });
   };
 
   const statusClass = (s: string) => s.replace(/\s/g, '');
+
+  const openEdit = (e: React.MouseEvent, task: Task) => {
+    e.stopPropagation();
+    setEditTask(task);
+    setShowModal(true);
+  };
+
+  const openDelete = (e: React.MouseEvent, task: Task) => {
+    e.stopPropagation();
+    setDeleteTask(task);
+  };
 
   return (
     <>
@@ -81,35 +95,55 @@ export default function TaskList({ onStatsRefresh }: Props) {
               />
             </div>
 
-            <select className="filter-select" value={status} onChange={(e) => setStatus(e.target.value)}>
+            <select
+              className="filter-select"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
               <option value="">All Status</option>
               <option value="Pending">Pending</option>
               <option value="In Progress">In Progress</option>
               <option value="Completed">Completed</option>
             </select>
 
-            <select className="filter-select" value={priority} onChange={(e) => setPriority(e.target.value)}>
+            <select
+              className="filter-select"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+            >
               <option value="">All Priority</option>
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
             </select>
 
-            <select className="filter-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <select
+              className="filter-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
               <option value="due_date">Due Date</option>
             </select>
 
-            <button className="btn-add" onClick={() => { setEditTask(null); setShowModal(true); }}>
-              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <button
+              className="btn-add"
+              onClick={() => { setEditTask(null); setShowModal(true); }}
+            >
+              <svg viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
               New Task
             </button>
           </div>
         </div>
 
         {isLoading ? (
-          <div className="loading-wrap"><div className="spinner" /></div>
+          <div className="loading-wrap">
+            <div className="spinner" />
+          </div>
         ) : paginated.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">
@@ -135,9 +169,15 @@ export default function TaskList({ onStatsRefresh }: Props) {
                     {task.title}
                   </p>
                   <div className="task-row-meta">
-                    <span className={`badge badge-${task.priority}`}>{task.priority}</span>
-                    <span className={`badge badge-${statusClass(task.status)}`}>{task.status}</span>
-                    {isOverdue(task) && <span className="badge badge-overdue">Overdue</span>}
+                    <span className={`badge badge-${task.priority}`}>
+                      {task.priority}
+                    </span>
+                    <span className={`badge badge-${statusClass(task.status)}`}>
+                      {task.status}
+                    </span>
+                    {isOverdue(task) && (
+                      <span className="badge badge-overdue">Overdue</span>
+                    )}
                     <span className={`due-date${isOverdue(task) ? ' overdue' : ''}`}>
                       <svg viewBox="0 0 24 24">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -154,8 +194,8 @@ export default function TaskList({ onStatsRefresh }: Props) {
                   <div className="task-actions">
                     <button
                       className="btn-task"
-                      title="Edit"
-                      onClick={() => { setEditTask(task); setShowModal(true); }}
+                      title="Edit task"
+                      onClick={(e) => openEdit(e, task)}
                     >
                       <svg viewBox="0 0 24 24">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -164,8 +204,8 @@ export default function TaskList({ onStatsRefresh }: Props) {
                     </button>
                     <button
                       className="btn-task delete"
-                      title="Delete"
-                      onClick={() => setDeleteTask(task)}
+                      title="Delete task"
+                      onClick={(e) => openDelete(e, task)}
                     >
                       <svg viewBox="0 0 24 24">
                         <polyline points="3 6 5 6 21 6"/>
@@ -188,7 +228,9 @@ export default function TaskList({ onStatsRefresh }: Props) {
               onClick={() => setPage((p) => p - 1)}
               disabled={page === 1}
             >
-              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+              <svg viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
             </button>
             {Array.from({ length: totalPages }, (_, i) => (
               <button
@@ -204,7 +246,9 @@ export default function TaskList({ onStatsRefresh }: Props) {
               onClick={() => setPage((p) => p + 1)}
               disabled={page === totalPages}
             >
-              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
             </button>
           </div>
         )}

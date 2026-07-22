@@ -9,7 +9,12 @@ export interface TaskFilters {
 }
 
 export const getTasks = async (filters: TaskFilters = {}): Promise<Task[]> => {
-  const response = await api.get('/tasks', { params: filters });
+  // Remove empty string values so the backend validator
+  // doesn't receive invalid empty enum values
+  const cleanFilters = Object.fromEntries(
+    Object.entries(filters).filter(([, v]) => v !== '' && v !== undefined)
+  );
+  const response = await api.get('/tasks', { params: cleanFilters });
   return response.data.data;
 };
 
