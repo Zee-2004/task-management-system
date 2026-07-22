@@ -1,398 +1,199 @@
-\# TaskFlow
-
-
+# TaskFlow
 
 A full-stack task management app built with React, Node.js, Express, TypeScript, and PostgreSQL. Log in, create tasks, track them by priority and status, and get a quick overview from the dashboard.
 
+**Live Demo:** https://your-frontend-url.vercel.app  
+**API:** https://your-backend-url.onrender.com
 
+---
 
-\*\*Live Demo:\*\* https://your-frontend-url.vercel.app  
-
-\*\*API:\*\* https://your-backend-url.onrender.com
-
-
-
-\---
-
-
-
-\## Project Overview
-
-
+## Project Overview
 
 After logging in you land on a dashboard showing how many tasks are pending, in progress, completed, or overdue. From there you can create tasks, edit them, delete them, search by title, filter by status or priority, and sort by date. There's also a dark mode toggle and the layout works on mobile.
 
+---
 
-
-\---
-
-
-
-\## Technology Stack
-
-
+## Technology Stack
 
 | Layer | Technology |
-
 |---|---|
-
 | Frontend | React 18, TypeScript, Vite, React Router, Axios |
-
 | Backend | Node.js, Express.js, TypeScript |
-
 | Database | PostgreSQL |
-
 | Authentication | JWT + bcrypt |
-
 | Validation | express-validator (backend), controlled forms (frontend) |
-
 | Styling | Pure CSS with CSS custom properties |
 
+---
 
+## Installation Instructions
 
-\---
+### Prerequisites
 
+- Node.js v18+
+- PostgreSQL v14+
+- Git
 
-
-\## Installation Instructions
-
-
-
-\### Prerequisites
-
-
-
-\- Node.js v18+
-
-\- PostgreSQL v14+
-
-\- Git
-
-
-
-\### Clone the repository
-
-
+### Clone the repository
 
 ```bash
-
 git clone https://github.com/Zee-2004/task-management-system.git
-
 cd task-management-system
-
 ```
 
+---
 
+## Environment Variables
 
-\---
-
-
-
-\## Environment Variables
-
-
-
-\### Backend
-
-
+### Backend
 
 Copy the example file and fill in your values:
 
-
-
 ```bash
-
 cp backend/.env.example backend/.env
-
 ```
 
-
-
 ```
-
 PORT=5000
+NODE_ENV=development
 
-NODE\_ENV=development
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=task_management
+DB_USER=postgres
+DB_PASSWORD=your_postgres_password
 
+JWT_SECRET=your_long_random_string
+JWT_EXPIRES_IN=1h
 
-
-DB\_HOST=localhost
-
-DB\_PORT=5432
-
-DB\_NAME=task\_management
-
-DB\_USER=postgres
-
-DB\_PASSWORD=your\_postgres\_password
-
-
-
-JWT\_SECRET=your\_long\_random\_string
-
-JWT\_EXPIRES\_IN=1h
-
-
-
-CORS\_ORIGIN=http://localhost:5173
-
+CORS_ORIGIN=http://localhost:5173
 ```
-
-
 
 To generate a secure JWT secret:
 
-
-
 ```bash
-
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
 ```
 
-
-
-\### Frontend
-
-
+### Frontend
 
 ```bash
-
 cp frontend/.env.example frontend/.env
-
 ```
 
-
-
+```
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-VITE\_API\_BASE\_URL=http://localhost:5000/api
+---
 
-```
-
-
-
-\---
-
-
-
-\## Database Setup
-
-
+## Database Setup
 
 ```bash
-
-psql -U postgres -c "CREATE DATABASE task\_management;"
-
-psql -U postgres -d task\_management -f database/schema.sql
-
-psql -U postgres -d task\_management -f database/seed.sql
-
+psql -U postgres -c "CREATE DATABASE task_management;"
+psql -U postgres -d task_management -f database/schema.sql
+psql -U postgres -d task_management -f database/seed.sql
 ```
-
-
 
 Default login credentials:
 
-
-
 | Field | Value |
-
 |---|---|
-
 | Email | admin@test.com |
-
 | Password | 123456 |
 
+---
 
-
-\---
-
-
-
-\## Running the Backend
-
-
+## Running the Backend
 
 ```bash
-
 cd backend
-
 npm install
-
 npm run dev
-
 ```
-
-
 
 Runs at http://localhost:5000. Health check: GET /api/health
 
+---
 
-
-\---
-
-
-
-\## Running the Frontend
-
-
+## Running the Frontend
 
 ```bash
-
 cd frontend
-
 npm install
-
 npm run dev
-
 ```
-
-
 
 Runs at http://localhost:5173
 
+---
 
-
-\---
-
-
-
-\## API Documentation
-
-
+## API Documentation
 
 All endpoints except /api/auth/login require an `Authorization: Bearer <token>` header.
 
-
-
-\### Authentication
-
-
+### Authentication
 
 | Method | Endpoint | Description |
-
 |---|---|---|
-
 | POST | /api/auth/login | Log in, returns JWT token |
-
 | POST | /api/auth/logout | Log out |
 
-
-
-\### Tasks
-
-
+### Tasks
 
 | Method | Endpoint | Description |
-
 |---|---|---|
-
 | GET | /api/tasks | List tasks (supports search, status, priority, sortBy params) |
-
 | GET | /api/tasks/:id | Get one task |
-
 | POST | /api/tasks | Create a task |
-
 | PUT | /api/tasks/:id | Update a task |
-
 | DELETE | /api/tasks/:id | Delete a task |
-
 | GET | /api/tasks/stats/dashboard | Get dashboard counts |
 
-
-
-\### Task fields
-
-
+### Task fields
 
 ```json
-
 {
-
-&#x20; "title": "required, max 200 characters",
-
-&#x20; "description": "optional",
-
-&#x20; "priority": "Low | Medium | High",
-
-&#x20; "status": "Pending | In Progress | Completed",
-
-&#x20; "due\_date": "YYYY-MM-DD, cannot be in the past"
-
+  "title": "required, max 200 characters",
+  "description": "optional",
+  "priority": "Low | Medium | High",
+  "status": "Pending | In Progress | Completed",
+  "due_date": "YYYY-MM-DD, cannot be in the past"
 }
-
 ```
 
+---
 
-
-\---
-
-
-
-\## Folder Structure
-
-
+## Folder Structure
 
 The project is split into three main folders — `backend` for the API, `frontend` for the React app, and `database` for the SQL files. Inside the backend, code is organized by what it does: routes define the endpoints, controllers handle the logic, middleware handles auth and validation, and utils hold shared helpers. The frontend follows a similar pattern with pages, components, an api folder for all HTTP calls, and a context folder for auth state.
 
+---
 
+## Assumptions Made
 
-\---
+- A single admin account is used as specified. No registration flow is implemented.
+- Overdue means the due date has passed and the task is not completed.
+- Search is case-insensitive and matches any part of the title.
+- JWT was chosen over session-based auth as it was the preferred option.
+- Tasks are scoped to user_id to support multiple users in future.
+- Editing an existing overdue task allows saving without changing the date.
 
+---
 
+## Known Limitations
 
-\## Assumptions Made
+- No registration page (not required by spec).
+- Sessions expire after 1 hour — refresh tokens not implemented.
+- No automated test suite (listed as a bonus feature).
+- Pagination is client-side, 8 tasks per page.
 
+---
 
+## Bonus Features Implemented
 
-\- A single admin account is used as specified. No registration flow is implemented.
-
-\- Overdue means the due date has passed and the task is not completed.
-
-\- Search is case-insensitive and matches any part of the title.
-
-\- JWT was chosen over session-based auth as it was the preferred option.
-
-\- Tasks are scoped to user\_id to support multiple users in future.
-
-\- Editing an existing overdue task allows saving without changing the date.
-
-
-
-\---
-
-
-
-\## Known Limitations
-
-
-
-\- No registration page (not required by spec).
-
-\- Sessions expire after 1 hour — refresh tokens not implemented.
-
-\- No automated test suite (listed as a bonus feature).
-
-\- Pagination is client-side, 8 tasks per page.
-
-
-
-\---
-
-
-
-\## Bonus Features Implemented
-
-
-
-\- Dark mode, persists across sessions via localStorage
-
-\- Toast notifications for all user actions
-
-\- Loading indicators and skeleton animations
-
-\- Pagination, 8 tasks per page
-
-\- Fully responsive across desktop, tablet, and mobile
-
+- Dark mode, persists across sessions via localStorage
+- Toast notifications for all user actions
+- Loading indicators and skeleton animations
+- Pagination, 8 tasks per page
+- Fully responsive across desktop, tablet, and mobile
