@@ -27,21 +27,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const { token, user: loggedInUser } = await authApi.login(email, password);
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(loggedInUser));
-    setUser(loggedInUser);
-  };
+  const { token, refreshToken, user: loggedInUser } = await authApi.login(email, password);
+  localStorage.setItem('token', token);
+  localStorage.setItem('refreshToken', refreshToken);
+  localStorage.setItem('user', JSON.stringify(loggedInUser));
+  setUser(loggedInUser);
+};
 
   const logout = async () => {
-    try {
-      await authApi.logout();
-    } finally {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      setUser(null);
-    }
-  };
+  try {
+    await authApi.logout();
+  } finally {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    setUser(null);
+  }
+};
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout }}>
