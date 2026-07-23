@@ -1,3 +1,4 @@
+import React from 'react';
 import type { DashboardStats as StatsType } from '../types';
 
 interface Props {
@@ -11,7 +12,7 @@ const statConfig: {
   color: string;
   bg: string;
   footer: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 }[] = [
   {
     key: 'total',
