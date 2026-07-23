@@ -154,6 +154,17 @@ Default credentials when using Docker:
 
 ---
 
+## Running Tests
+
+```bash
+cd backend
+npm test
+```
+
+---
+
+Runs 10 unit tests covering authentication and task API endpoints using Jest and Supertest.
+
 ## API Documentation
 
 All endpoints except /api/auth/login require an `Authorization: Bearer <token>` header.
