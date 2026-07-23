@@ -128,6 +128,32 @@ Runs at http://localhost:5173
 
 ---
 
+## Docker Setup
+
+Run the entire backend and database with one command — no need to install PostgreSQL or configure anything manually:
+
+```bash
+docker-compose up --build
+```
+
+This starts PostgreSQL and the backend API together. The database schema and seed data are applied automatically on first run.
+
+To stop everything:
+```bash
+docker-compose down
+```
+
+To stop and wipe all data:
+```bash
+docker-compose down -v
+```
+
+Default credentials when using Docker:
+- Email: admin@test.com
+- Password: 123456
+
+---
+
 ## API Documentation
 
 All endpoints except /api/auth/login require an `Authorization: Bearer <token>` header.
