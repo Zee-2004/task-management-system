@@ -1,4 +1,6 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import type { Task, TaskFormData, TaskPriority, TaskStatus } from '../types';
 import { createTask, updateTask } from '../api/tasks';
 import { toast } from 'react-toastify';
