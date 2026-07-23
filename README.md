@@ -2,8 +2,8 @@
 
 A full-stack task management app built with React, Node.js, Express, TypeScript, and PostgreSQL. Log in, create tasks, track them by priority and status, and get a quick overview from the dashboard.
 
-**Live Demo:** https://your-frontend-url.vercel.app  
-**API:** https://your-backend-url.onrender.com
+**Live Demo:** https://task-management-system-uic2-eight.vercel.app
+**API:** https://task-management-system-production-0640.up.railway.app
 
 ---
 
